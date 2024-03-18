@@ -7,8 +7,6 @@ import { uuid } from "uuidv4";
 
 const userLogin = async (req: Request, res: Response) => {
   const { email, password } = req.body;
-  const randomString = uuid();
-  console.log(randomString);
 
   console.log(req.body);
 
@@ -31,7 +29,11 @@ const userLogin = async (req: Request, res: Response) => {
     user_id: findUser?._id,
   };
 
-  const access_token = jwt.sign(payload, "Secret-Key-1076");
+  const access_token = jwt.sign(payload, process.env!.secret_key!, {
+    expiresIn: "90days",
+  });
+
+  console.log(access_token);
 
   res.status(200).json({
     message: "Login successful",

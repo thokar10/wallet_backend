@@ -7,6 +7,7 @@ import "./models/user.model";
 import userRouter from "./modules/Users/routes";
 import cors from "cors";
 import ErrorHandler from "./modules/Users/handler/ErrorHandler";
+import BankRouter from "./modules/Banks/routes";
 const app = express();
 require("dotenv").config();
 
@@ -23,6 +24,8 @@ mongoose
   });
 
 app.use("/users", userRouter);
+app.use("/banks", BankRouter);
+
 app.use(ErrorHandler);
 
 app.listen(8000, () => {

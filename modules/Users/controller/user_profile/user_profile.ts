@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
 import userModel from "../../../../models/user.model";
-import jwt from "jsonwebtoken";
 
 const userProfile = async (req: any, res: Response) => {
   console.log(req.user);
