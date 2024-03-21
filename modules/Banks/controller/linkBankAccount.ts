@@ -9,10 +9,11 @@ const LinkBankAccount = async (req: any, res: Response) => {
     bank_name,
     account_name,
     account_no,
+    balance: 50000,
   });
 
   res.status(200).json({
-    message: "bank successfully",
+    message: " Bank Linked Successfully",
   });
 };
 export default LinkBankAccount;

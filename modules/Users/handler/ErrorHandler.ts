@@ -14,7 +14,7 @@ const ErrorHandler = (
       });
     } else {
       res.status(400).json({
-        message: "failed",
+        message: "something went wrong",
       });
     }
   } else {

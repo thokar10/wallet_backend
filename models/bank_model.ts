@@ -4,23 +4,23 @@ const bankSchema = new mongoose.Schema(
   {
     user_id: {
       type: mongoose.Schema.Types.ObjectId,
-      require: true,
+      required: true,
     },
     bank_name: {
       type: String,
-      require: true,
+      required: true,
     },
     account_name: {
       type: String,
-      require: true,
+      required: true,
     },
     balance: {
       type: Number,
-      require: true,
+      required: true,
     },
     account_no: {
       type: Number,
-      require: true,
+      required: true,
     },
   },
   {
