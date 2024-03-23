@@ -5,10 +5,11 @@ import mongoose, { mongo } from "mongoose";
 import transactionsModel from "../../../models/transaction_model";
 
 const transferToUserWallet = async (req: any, res: Response) => {
-  const { user_input_balance, transaction_type } = req.body;
+  const { user_input_balance, transaction_type, bank_name } = req.body;
 
   const userBankData = await BankModel.findOne({
     user_id: req.user.user_id,
+    bank_name,
   });
 
   if (!userBankData) throw "user invalid";
@@ -27,6 +28,7 @@ const transferToUserWallet = async (req: any, res: Response) => {
       const subtractedBankBalance = await BankModel.updateOne(
         {
           user_id: req.user.user_id,
+          bank_name,
         },
         {
           $inc: {
