@@ -7,7 +7,6 @@ import transactionsModel from "../../../models/transaction_model";
 const walletToBank = async (req: any, res: Response) => {
   const {
     user_input_balance,
-    transaction_type,
 
     bank_name,
     account_no,
@@ -20,7 +19,7 @@ const walletToBank = async (req: any, res: Response) => {
     _id: req.user.user_id,
   });
 
-  if (!userModelData) throw "user invalid";
+  if (!userModelData) throw "check user details";
 
   const userBalance = userModelData.balance;
 
@@ -30,10 +29,10 @@ const walletToBank = async (req: any, res: Response) => {
   if (user_input_balance <= userBalance) {
     //session start to roll back
     const session = await mongoose.startSession();
-    await session.withTransaction(async (session) => {
+    await session.withTransaction(async (session: any) => {
       // Reduced the bankBalance of user
 
-      const subtractedBankBalance = await userModel.updateOne(
+      await userModel.updateOne(
         {
           _id: req.user.user_id,
         },
@@ -46,14 +45,12 @@ const walletToBank = async (req: any, res: Response) => {
           session,
         }
       );
-      if (!subtractedBankBalance) throw "user balance cant be updated";
 
       //transfer balance from bank  to user
 
-      const BankTransfer = await BankModel.updateOne(
+      const updateBank = await BankModel.findOneAndUpdate(
         {
           user_id: req.user.user_id,
-          _id: bank_id,
           bank_name,
           account_no,
         },
@@ -66,22 +63,26 @@ const walletToBank = async (req: any, res: Response) => {
           session,
         }
       );
-      if (!BankTransfer) throw "balance transfer failed";
-
+      if (!updateBank) throw "invalid";
       const bankDetails = await BankModel.findOne({
         user_id: req.user.user_id,
       });
 
       if (!bankDetails) throw "transaction log cannot be prepared";
 
-      const value = await transactionsModel.create([
+      await transactionsModel.create(
+        [
+          {
+            user_id: req.user.user_id,
+            balance: user_input_balance,
+            transaction_type: "withdraw",
+            info: `${user_input_balance} is transferred from ${userModelData.name} to (account_no: ${bankDetails.account_no}),(account_name:${bankDetails.account_name}),(bank_name:${bankDetails.bank_name})`,
+          },
+        ],
         {
-          user_id: req.user.user_id,
-          balance: user_input_balance,
-          transaction_type,
-          info: `${user_input_balance} is transferred from ${userModelData.name} to (account_no: ${bankDetails.account_no}),(account_name:${bankDetails.account_name}),(bank_name:${bankDetails.bank_name})`,
-        },
-      ]);
+          session,
+        }
+      );
 
       //end
 

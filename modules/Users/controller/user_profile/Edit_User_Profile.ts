@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import userModel from "../../../../models/user.model";
 const EditUserProfile = async (req: any, res: Response) => {
   console.log(req.user.user_id);
-  const { name, phone_no, location } = req.body;
+  const { name, phone_no, Location } = req.body;
 
   const updateUser = await userModel.updateOne(
     {
@@ -11,7 +11,7 @@ const EditUserProfile = async (req: any, res: Response) => {
     {
       name,
       phone_no,
-      location,
+      Location,
     }
   );
 

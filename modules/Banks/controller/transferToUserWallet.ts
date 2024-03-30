@@ -5,7 +5,7 @@ import mongoose, { mongo } from "mongoose";
 import transactionsModel from "../../../models/transaction_model";
 
 const transferToUserWallet = async (req: any, res: Response) => {
-  const { user_input_balance, transaction_type, bank_name } = req.body;
+  const { user_input_balance, bank_name } = req.body;
 
   const userBankData = await BankModel.findOne({
     user_id: req.user.user_id,
@@ -25,7 +25,7 @@ const transferToUserWallet = async (req: any, res: Response) => {
     await session.withTransaction(async (session) => {
       // Reduced the bankBalance
 
-      const subtractedBankBalance = await BankModel.updateOne(
+      const subtractedBankBalance = await BankModel.findOneAndUpdate(
         {
           user_id: req.user.user_id,
           bank_name,
@@ -45,14 +45,14 @@ const transferToUserWallet = async (req: any, res: Response) => {
         {
           user_id: req.user.user_id,
           balance: user_input_balance,
-          transaction_type,
+          transaction_type: "load",
           info: `${user_input_balance} is loaded from ${userBankData.bank_name} (account_no: ${userBankData.account_no}),(account_name:${userBankData.account_name})`,
         },
       ]);
 
       //transfer balance from bank  to user
 
-      const userDetails = await userModel.updateOne(
+      const userDetails = await userModel.findOneAndUpdate(
         {
           _id: req.user.user_id,
         },

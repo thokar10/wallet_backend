@@ -2,6 +2,7 @@ import { Request, Response, json } from "express";
 import userModel from "../../../../models/user.model";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import validator from "validator";
 
 const userRegister = async (req: Request, res: Response) => {
   const { email, password, name, confirm_password } = req.body;
@@ -13,6 +14,8 @@ const userRegister = async (req: Request, res: Response) => {
     email,
   });
 
+  const checkEmail = validator.isEmail(email.toString());
+  if (!checkEmail) throw "invalid email format";
   if (findEmail) throw "email already existed ";
 
   if (!email) throw "email  is required ";

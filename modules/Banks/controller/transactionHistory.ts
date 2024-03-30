@@ -13,7 +13,8 @@ const TransactionHistory = async (req: any, res: Response) => {
         user_id: req.user.user_id,
         transaction_type: type,
       })
-      .sort("-createdAt");
+      .sort("-createdAt")
+      .limit(10);
 
     if (!TransactionDetails) throw "unable to find Transaction history";
   } else {
@@ -21,7 +22,8 @@ const TransactionHistory = async (req: any, res: Response) => {
       .find({
         user_id: req.user.user_id,
       })
-      .sort("-createdAt");
+      .sort("-createdAt")
+      .limit(10);
     if (!TransactionDetails) throw "unable to find Transaction history";
   }
 

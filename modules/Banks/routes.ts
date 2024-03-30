@@ -15,9 +15,9 @@ BankRouter.use(auth_id);
 
 BankRouter.post("/linkBank", LinkBankAccount);
 BankRouter.get("/bankDetails", getBankDetails);
-BankRouter.get("/transactionHistory", TransactionHistory);
+BankRouter.post("/transactionHistory", TransactionHistory);
 
 BankRouter.post("/bankToWallet", transferToUserWallet);
-BankRouter.post("/walletToBank/:bank_id", walletToBank);
+BankRouter.post("/walletToBank", walletToBank);
 BankRouter.post("/userToUser", userToUser);
 export default BankRouter;
